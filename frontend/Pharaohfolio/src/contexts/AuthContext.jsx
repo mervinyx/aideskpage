@@ -86,6 +86,7 @@ export const AuthProvider = ({ children }) => {
         const isAuthEndpoint =
           url.includes('/api/auth/token/refresh/') ||
           url.includes('/api/auth/login/') ||
+          url.includes('/api/auth/email-code/') ||
           url.includes('/api/auth/logout/') ||
           url.includes('/api/auth/google/');
 

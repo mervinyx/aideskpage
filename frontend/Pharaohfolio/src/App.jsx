@@ -4,12 +4,8 @@ import ProtectedRoute from './components/ProtectedRoute'
 import PublicRoute from './components/PublicRoute'
 import Login from './components/auth/Login'
 import Register from './components/auth/Register'
-import ForgotPassword from './components/auth/ForgotPassword'
-import ResetPassword from './components/auth/ResetPassword'
 import Dashboard from './components/main/Dashboard'
-import LandingPage from './components/main/LandingPage'
 import EmailVerification from './components/auth/EmailVerification'
-import GoogleCallback from './components/auth/GoogleCallback'
 import Profile from './components/profile/Profile'
 import EmailChangeVerification from './components/profile/EmailChangeVerification'
 import PublicPortfolio from './components/main/PublicPortfolio'
@@ -44,22 +40,14 @@ function App() {
             />
             <Route 
               path="/forgot-password" 
-              element={
-                <PublicRoute>
-                  <ForgotPassword />
-                </PublicRoute>
-              } 
+              element={<Navigate to="/login" replace />}
             />
             <Route 
               path="/reset-password" 
-              element={
-                <PublicRoute>
-                  <ResetPassword />
-                </PublicRoute>
-              } 
+              element={<Navigate to="/login" replace />}
             />
             <Route path="/verify-email/:uid/:token" element={<EmailVerification />} />
-            <Route path="/auth/google/callback" element={<GoogleCallback />} />
+            <Route path="/auth/google/callback" element={<Navigate to="/login" replace />} />
             <Route 
               path="/dashboard" 
               element={<Navigate to="/projects" replace />} 

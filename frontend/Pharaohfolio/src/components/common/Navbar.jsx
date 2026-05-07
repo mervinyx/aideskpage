@@ -108,10 +108,10 @@ const Navbar = ({ onToggle }) => {
                     textShadow: '0 2px 8px rgba(124,58,237,0.12)'
                   }}
                 >
-                  Pharaohfolio
+                  喜播AI网页发布
                 </div>
                 <p className="text-center text-gray-500 text-sm font-medium mt-1">
-                  Simple Hosting for Single-Page Portfolios
+                  内部网页发布工具
                 </p>
               </div>
 
@@ -227,7 +227,7 @@ const Navbar = ({ onToggle }) => {
               </button>
               <div className="text-center">
                 <p className="text-gray-500 text-xs font-medium">
-                  👑 Pharaohfolio – Simple Hosting for Single-Page Portfolios 👑
+                  喜播AI网页发布
                 </p>
               </div>
             </div>

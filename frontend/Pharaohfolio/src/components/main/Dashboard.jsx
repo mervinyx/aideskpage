@@ -49,7 +49,7 @@ const Dashboard = () => {
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           <div>
-            <h1 className="text-xl font-semibold">内部网页发布</h1>
+            <h1 className="text-xl font-semibold">喜播AI网页发布</h1>
             <p className="text-sm text-slate-500">{user?.email || user?.username}</p>
           </div>
           <div className="flex items-center gap-2">

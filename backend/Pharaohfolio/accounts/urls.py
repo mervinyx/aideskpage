@@ -1,5 +1,5 @@
 from django.urls import path
-from .auth import login, register, logout, google_auth, forget_password, profile
+from .auth import login, register, logout, google_auth, forget_password, profile, email_code
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (
@@ -14,6 +14,8 @@ urlpatterns = [
 
     # Authentication endpoints
     path('auth/login/', login.login_view, name='login'),
+    path('auth/email-code/send/', email_code.send_email_login_code, name='send_email_login_code'),
+    path('auth/email-code/verify/', email_code.verify_email_login_code, name='verify_email_login_code'),
     path('auth/logout/', logout.logout_view, name='logout'),
     path('auth/register/', register.register_view, name='register'),
     path('auth/verify-email/', register.verify_email, name='verify_email'),

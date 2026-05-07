@@ -32,14 +32,14 @@ const PublicRoute = ({ children }) => {
                 textShadow: '0 2px 8px rgba(124,58,237,0.12)'
               }}
             >
-              Pharaohfolio
+              喜播AI网页发布
             </div>
-            <p className="text-gray-500 text-sm mb-2">Simple Hosting for Single-Page Portfolios</p>
+            <p className="text-gray-500 text-sm mb-2">内部网页发布工具</p>
             <h2 className="text-2xl font-bold font-chef text-gray-800 mb-3">
-              Welcome!
+              正在进入
             </h2>
             <p className="text-gray-600 font-medium mb-6">
-              Your AI-powered portfolio is starting up...
+              正在检查登录状态...
             </p>
             <div className="flex items-center justify-center space-x-1">
               <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full animate-bounce"></div>
@@ -49,7 +49,7 @@ const PublicRoute = ({ children }) => {
           </div>
           <div className="text-center mt-8 absolute left-0 right-0 bottom-0">
             <p className="text-gray-500 text-sm font-medium">
-              👑 Pharaohfolio – Simple Hosting for Single-Page Portfolios 👑
+              喜播AI网页发布
             </p>
           </div>
         </div>
