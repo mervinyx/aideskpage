@@ -163,13 +163,12 @@ def projects_collection(request):
     except ValueError as exc:
         return Response({"error": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
 
-    sanitized_html, sanitization_log = sanitize_portfolio_code(raw_html)
     project = Project.objects.create(
         owner=request.user,
         title=title,
         raw_html=raw_html,
-        sanitized_html=sanitized_html,
-        sanitization_log=sanitization_log,
+        sanitized_html=raw_html,
+        sanitization_log=[],
         original_filename=original_filename,
         file_size=file_size,
     )
@@ -206,10 +205,9 @@ def project_detail(request, project_id):
                 raw_html, file_size = decode_html_content(html_content, original_filename)
         except ValueError as exc:
             return Response({"error": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
-        sanitized_html, sanitization_log = sanitize_portfolio_code(raw_html)
         project.raw_html = raw_html
-        project.sanitized_html = sanitized_html
-        project.sanitization_log = sanitization_log
+        project.sanitized_html = raw_html
+        project.sanitization_log = []
         project.original_filename = original_filename
         project.file_size = file_size
 
