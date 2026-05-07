@@ -1,0 +1,10 @@
+.vscode/
+backend/Pharaohfolio/.venv/
+backend/Pharaohfolio/.venv312/
+backend/Pharaohfolio/db.sqlite3
+frontend/Pharaohfolio/dist/
+__pycache__/
+!backend/Pharaohfolio/accounts/migrations/
+!backend/Pharaohfolio/accounts/migrations/*.py
+!backend/Pharaohfolio/portfolio/migrations/
+!backend/Pharaohfolio/portfolio/migrations/*.py
