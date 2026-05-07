@@ -2,7 +2,13 @@
 
 # Wait for database to be ready
 echo "Waiting for database..."
-while ! nc -z db 5432; do
+until python - <<'PY'
+import socket
+
+with socket.create_connection(("db", 5432), timeout=1):
+    pass
+PY
+do
   sleep 0.1
 done
 echo "Database is ready!"
