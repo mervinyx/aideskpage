@@ -3,6 +3,8 @@ FROM swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/python:3.13-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PIP_INDEX_URL https://mirrors.aliyun.com/pypi/simple/
+ENV PIP_TIMEOUT 120
 
 # Set work directory
 WORKDIR /app
