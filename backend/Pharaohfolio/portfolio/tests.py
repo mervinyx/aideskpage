@@ -62,6 +62,27 @@ class ProjectApiTestCase(TestCase):
         self.assertEqual(project.file_size, len(project.raw_html.encode("utf-8")))
         self.assertIn("<h1>画像</h1>", project.sanitized_html)
 
+    def test_project_slugs_are_not_sequentially_guessable(self):
+        first = Project.objects.create(
+            owner=self.user,
+            title="Page",
+            raw_html="<h1>First</h1>",
+            sanitized_html="<h1>First</h1>",
+            original_filename="first.html",
+        )
+        second = Project.objects.create(
+            owner=self.user,
+            title="Page",
+            raw_html="<h1>Second</h1>",
+            sanitized_html="<h1>Second</h1>",
+            original_filename="second.html",
+        )
+
+        self.assertRegex(first.slug, r"^page-[0-9a-f]{8}$")
+        self.assertRegex(second.slug, r"^page-[0-9a-f]{8}$")
+        self.assertNotEqual(first.slug, second.slug)
+        self.assertNotRegex(second.slug, r"^page-\d+$")
+
     def test_rejects_non_html_uploads(self):
         response = self.client.post(
             "/api/portfolio/projects/",

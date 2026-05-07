@@ -1,3 +1,5 @@
+import secrets
+
 from django.db import models
 from django.utils.text import slugify
 
@@ -28,13 +30,15 @@ class Project(models.Model):
         super().save(*args, **kwargs)
 
     def build_unique_slug(self):
-        base = slugify(self.title)[:140] or "page"
-        candidate = base
-        suffix = 1
+        base = slugify(self.title)[:150] or "page"
+        candidate = self.build_public_slug_candidate(base)
         while Project.objects.filter(slug=candidate).exclude(pk=self.pk).exists():
-            suffix += 1
-            candidate = f"{base}-{suffix}"
+            candidate = self.build_public_slug_candidate(base)
         return candidate
+
+    @staticmethod
+    def build_public_slug_candidate(base):
+        return f"{base}-{secrets.token_hex(4)}"
 
     def __str__(self):
         return f"{self.title} ({self.owner.username})"
