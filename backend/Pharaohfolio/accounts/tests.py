@@ -11,7 +11,11 @@ class EmailCodeAuthTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-    @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
+    @override_settings(
+        EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+        DEFAULT_FROM_EMAIL="webmaster@localhost",
+        EMAIL_HOST_USER="imhoteptech1@gmail.com",
+    )
     def test_send_email_login_code_creates_code_and_sends_email(self):
         response = self.client.post(
             "/api/auth/email-code/send/",
@@ -23,6 +27,7 @@ class EmailCodeAuthTestCase(TestCase):
         self.assertEqual(EmailLoginCode.objects.filter(email="new@example.com").count(), 1)
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn("喜播AI网页发布", mail.outbox[0].subject)
+        self.assertEqual(mail.outbox[0].from_email, "imhoteptech1@gmail.com")
 
     def test_verify_email_login_code_creates_user_and_returns_tokens(self):
         code = EmailLoginCode.objects.create(

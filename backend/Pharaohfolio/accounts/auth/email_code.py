@@ -1,5 +1,6 @@
 import secrets
 import re
+import smtplib
 
 from django.conf import settings
 from django.core.mail import send_mail
@@ -30,6 +31,10 @@ def build_unique_username(email):
     return candidate
 
 
+def get_email_from_address():
+    return settings.EMAIL_HOST_USER or getattr(settings, "DEFAULT_FROM_EMAIL", "")
+
+
 def serialize_user(user):
     return {
         "id": user.id,
@@ -56,13 +61,17 @@ def send_email_login_code(request):
         expires_at=timezone.now() + timezone.timedelta(minutes=CODE_TTL_MINUTES),
     )
 
-    send_mail(
-        "喜播AI网页发布登录验证码",
-        f"你的登录验证码是：{code}。验证码 {CODE_TTL_MINUTES} 分钟内有效，请勿转发给他人。",
-        getattr(settings, "DEFAULT_FROM_EMAIL", settings.EMAIL_HOST_USER),
-        [email],
-        fail_silently=False,
-    )
+    try:
+        send_mail(
+            "喜播AI网页发布登录验证码",
+            f"你的登录验证码是：{code}。验证码 {CODE_TTL_MINUTES} 分钟内有效，请勿转发给他人。",
+            get_email_from_address(),
+            [email],
+            fail_silently=False,
+        )
+    except (smtplib.SMTPException, OSError):
+        EmailLoginCode.objects.filter(email=email, code=code, used_at__isnull=True).update(used_at=timezone.now())
+        return Response({"error": "邮件服务暂时不可用，请稍后重试"}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
     return Response({"message": "验证码已发送"})
 
 
