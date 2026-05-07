@@ -18,6 +18,14 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+def csv_config(name, default=""):
+    return [
+        value.strip()
+        for value in config(name, default=default).split(",")
+        if value.strip()
+    ]
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -27,14 +35,10 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-1ogqe*_xg$2$kfkdp582m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = [
-    host.strip()
-    for host in config(
-        'ALLOWED_HOSTS',
-        default='localhost,127.0.0.1,0.0.0.0,backend,101.47.158.135',
-    ).split(',')
-    if host.strip()
-]
+ALLOWED_HOSTS = csv_config(
+    'ALLOWED_HOSTS',
+    default='localhost,127.0.0.1,0.0.0.0,backend,101.47.158.135',
+)
 
 if DEBUG:
     # Add this to your settings
@@ -233,7 +237,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://101.47.158.135",
     "https://pharaohfolio.vercel.app",
     "https://pharaohfolio.pythonanywhere.com",
-]
+] + csv_config("CSRF_TRUSTED_ORIGINS")
 
 # CORS settings for development
 CORS_ALLOWED_ORIGINS = [
@@ -242,7 +246,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://101.47.158.135",
     "https://pharaohfolio.vercel.app",
     "https://pharaohfolio.pythonanywhere.com",
-]
+] + csv_config("CORS_ALLOWED_ORIGINS")
 
 # Add logging configuration
 LOGGING = {
