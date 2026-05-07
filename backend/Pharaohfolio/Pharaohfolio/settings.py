@@ -138,6 +138,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'imhoteptech1@gmail.com'
 EMAIL_HOST_PASSWORD = config('MAIL_PASSWORD', default='')
+EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=10, cast=int)
 
 WSGI_APPLICATION = 'Pharaohfolio.wsgi.application'
 
