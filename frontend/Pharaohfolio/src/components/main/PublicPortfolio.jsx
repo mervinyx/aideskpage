@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { withSandboxStorageFallback } from '../../utils/sandboxHtml';
 
 const PublicPortfolio = () => {
   const { slug } = useParams();
@@ -37,7 +38,7 @@ const PublicPortfolio = () => {
   return (
     <iframe
       title="Published HTML"
-      srcDoc={html}
+      srcDoc={withSandboxStorageFallback(html)}
       sandbox="allow-scripts"
       className="h-screen w-full border-0"
     />

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowLeft, Copy, ExternalLink, FileUp, Rocket, Save } from 'lucide-react';
+import { withSandboxStorageFallback } from '../../utils/sandboxHtml';
 
 const ProjectEditor = ({ mode = 'edit' }) => {
   const { id } = useParams();
@@ -34,7 +35,7 @@ const ProjectEditor = ({ mode = 'edit' }) => {
     loadProject();
   }, [id, isNew]);
 
-  const previewHtml = useMemo(() => html, [html]);
+  const previewHtml = useMemo(() => withSandboxStorageFallback(html), [html]);
 
   const readLocalPreview = async (selectedFile) => {
     if (!selectedFile) {
