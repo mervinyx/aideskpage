@@ -23,8 +23,7 @@ const Login = () => {
     setError('');
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     setError('');
 
     if (!formData.username.trim() || !formData.password) {
@@ -84,7 +83,7 @@ const Login = () => {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700">账号</label>
                 <div className="relative mt-2">
@@ -96,7 +95,7 @@ const Login = () => {
                     onChange={handleChange}
                     className="w-full rounded-md border border-slate-300 py-2.5 pl-10 pr-3 text-sm outline-none focus:border-slate-900"
                     placeholder="请输入账号"
-                    autoComplete="username"
+                    autoComplete="off"
                   />
                 </div>
               </div>
@@ -112,20 +111,24 @@ const Login = () => {
                     onChange={handleChange}
                     className="w-full rounded-md border border-slate-300 py-2.5 pl-10 pr-3 text-sm outline-none focus:border-slate-900"
                     placeholder="请输入密码"
-                    autoComplete="current-password"
+                    autoComplete="off"
+                    onKeyDown={event => {
+                      if (event.key === 'Enter') handleSubmit();
+                    }}
                   />
                 </div>
               </div>
 
               <button
-                type="submit"
+                type="button"
+                onClick={handleSubmit}
                 disabled={loading}
                 className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
               >
                 {loading ? '登录中...' : '登录并进入项目'}
                 <ArrowRight size={16} />
               </button>
-            </form>
+            </div>
 
             <div className="mt-5 border-t border-slate-100 pt-4 text-center text-sm text-slate-500">
               没有账号？
