@@ -49,3 +49,32 @@ class EmailCodeAuthTestCase(TestCase):
         self.assertTrue(User.objects.filter(email="new@example.com", email_verify=True).exists())
         code.refresh_from_db()
         self.assertTrue(code.used_at)
+
+
+class AccountPasswordAuthTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+    def test_register_without_email_creates_account(self):
+        response = self.client.post(
+            "/api/auth/register/",
+            {"username": "publisher", "password": "strong-pass-123", "password2": "strong-pass-123"},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(User.objects.filter(username="publisher", email="").exists())
+
+    def test_login_with_username_and_password_returns_tokens(self):
+        User.objects.create_user(username="publisher", password="strong-pass-123")
+
+        response = self.client.post(
+            "/api/auth/login/",
+            {"username": "publisher", "password": "strong-pass-123"},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("access", response.data)
+        self.assertIn("refresh", response.data)
+        self.assertEqual(response.data["user"]["username"], "publisher")

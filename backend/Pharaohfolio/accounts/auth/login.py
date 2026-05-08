@@ -5,12 +5,6 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.core.mail import send_mail
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.template.loader import render_to_string
-from django.contrib.auth.tokens import default_token_generator
-from Pharaohfolio.settings import SITE_DOMAIN, frontend_url
 from django.views.decorators.csrf import csrf_exempt
 
 #the login route
@@ -24,7 +18,7 @@ def login_view(request):
 
         if not user_username_mail or not password:
             return Response(
-                {'error': 'Username/email and password are required'}, 
+                {'error': '请输入账号和密码'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -42,7 +36,7 @@ def login_view(request):
                     user = authenticate(username=user_obj.username, password=password)
             except Exception as e:
                 return Response(
-                    {'error': 'Database error occurred'}, 
+                    {'error': '数据库连接异常'},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
 
@@ -61,12 +55,12 @@ def login_view(request):
             })
         else:
             return Response(
-                {'error': 'Invalid credentials'}, 
+                {'error': '账号或密码错误'},
                 status=status.HTTP_401_UNAUTHORIZED
             )
 
     except Exception as e:
         return Response(
-            {'error': 'An error occurred during login. Please try again.'}, 
+            {'error': '登录失败，请稍后重试'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )

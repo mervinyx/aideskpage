@@ -23,30 +23,30 @@ def register_view(request):
         last_name = request.data.get('last_name', '')
 
         # Check if all required fields are provided
-        if not all([username, email, password, password2]):
+        if not all([username, password, password2]):
             return Response(
-                {'error': 'All fields are required'}, 
+                {'error': '请输入账号和密码'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         # Check if username contains '@'
         if '@' in username:
             return Response(
-                {'error': 'Username cannot contain @ in it'}, 
+                {'error': '账号不能包含 @'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Check if email contains '@'
-        if '@' not in email:
+        # Check email format only when an email is provided.
+        if email and '@' not in email:
             return Response(
-                {'error': 'Email must contain @ in it'}, 
+                {'error': '请输入有效邮箱'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         # Check if passwords match
         if password != password2:
             return Response(
-                {'error': 'Passwords do not match'}, 
+                {'error': '两次输入的密码不一致'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -54,25 +54,25 @@ def register_view(request):
         try:
             if User.objects.filter(username=username).exists():
                 return Response(
-                    {'error': 'Username already exists'}, 
+                    {'error': '账号已存在'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
         except Exception as db_error:
             return Response(
-                {'error': 'Database connection error. Please ensure migrations are run and database is accessible.'}, 
+                {'error': '数据库连接异常'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         
-        # Check if email already exists
+        # Check if email already exists when provided.
         try:
-            if User.objects.filter(email=email).exists():
+            if email and User.objects.filter(email=email).exists():
                 return Response(
-                    {'error': 'Email already exists'}, 
+                    {'error': '邮箱已存在'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
         except Exception as db_error:
             return Response(
-                {'error': 'Database connection error. Please ensure migrations are run and database is accessible.'}, 
+                {'error': '数据库连接异常'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         
@@ -89,18 +89,18 @@ def register_view(request):
             user.save()
         except Exception:
             return Response(
-                {'error': f'Failed to create user'}, 
+                {'error': '账号创建失败'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
         return Response(
-            {'message': 'User created successfully.'}, 
+            {'message': '账号创建成功'},
             status=status.HTTP_201_CREATED
         )
             
     except Exception as e:
         return Response(
-            {'error': f'An error occurred during registration'}, 
+            {'error': '注册失败，请稍后重试'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
