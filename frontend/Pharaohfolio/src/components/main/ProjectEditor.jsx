@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowLeft, Copy, ExternalLink, FileUp, Rocket, Save } from 'lucide-react';
@@ -16,6 +16,7 @@ const ProjectEditor = ({ mode = 'edit' }) => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (isNew) return;
@@ -47,10 +48,10 @@ const ProjectEditor = ({ mode = 'edit' }) => {
     setHtml(text);
   };
 
-  const buildProjectPayload = () => {
+  const buildProjectPayload = async () => {
     const payload = { title };
     if (file) {
-      payload.html_content = html;
+      payload.html_content = await file.text();
       payload.original_filename = file.name;
     }
     return payload;
@@ -72,12 +73,16 @@ const ProjectEditor = ({ mode = 'edit' }) => {
     }
 
     try {
+      const payload = await buildProjectPayload();
       const response = isNew
-        ? await axios.post('/api/portfolio/projects/', buildProjectPayload())
-        : await axios.patch(`/api/portfolio/projects/${id}/`, buildProjectPayload());
+        ? await axios.post('/api/portfolio/projects/', payload)
+        : await axios.patch(`/api/portfolio/projects/${id}/`, payload);
       setProject(response.data);
       setHtml(response.data.html || html);
       setFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
       setNotice('已保存');
       if (isNew) {
         navigate(`/projects/${response.data.id}`, { replace: true });
@@ -179,9 +184,13 @@ const ProjectEditor = ({ mode = 'edit' }) => {
               <span className="text-sm font-medium text-slate-700">{file?.name || project?.original_filename || '选择 .html 文件'}</span>
               <span className="mt-1 text-xs text-slate-500">最大 5MB</span>
               <input
+                ref={fileInputRef}
                 type="file"
                 accept=".html,.htm,text/html"
                 className="sr-only"
+                onClick={event => {
+                  event.currentTarget.value = '';
+                }}
                 onChange={event => readLocalPreview(event.target.files?.[0])}
               />
             </label>

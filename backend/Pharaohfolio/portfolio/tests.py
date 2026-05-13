@@ -147,6 +147,27 @@ class ProjectApiTestCase(TestCase):
         self.assertEqual(public_response.status_code, status.HTTP_200_OK)
         self.assertIn("<h1>Public</h1>", public_response.data["html"])
 
+    def test_public_project_preserves_inline_data_images(self):
+        inline_image = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD"
+        html = f'<!doctype html><img class="aha-chat-shot" src="{inline_image}" alt="AHA chat">'
+        create_response = self.client.post(
+            "/api/portfolio/projects/",
+            {
+                "title": "Inline Image Demo",
+                "html_content": html,
+                "original_filename": "inline-image.html",
+            },
+            format="json",
+        )
+        self.assertEqual(create_response.status_code, status.HTTP_201_CREATED)
+
+        project = Project.objects.get(title="Inline Image Demo")
+        self.client.post(f"/api/portfolio/projects/{project.id}/publish/")
+        public_response = self.client.get(f"/api/portfolio/p/{project.slug}/")
+
+        self.assertEqual(public_response.status_code, status.HTTP_200_OK)
+        self.assertIn(inline_image, public_response.data["html"])
+
     def test_draft_project_is_not_public(self):
         project = Project.objects.create(
             owner=self.user,
